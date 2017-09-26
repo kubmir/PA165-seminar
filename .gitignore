@@ -2,3 +2,5 @@
 *.iml
 *~
 target
+currency-convertor/.project
+currency-convertor/.classpath

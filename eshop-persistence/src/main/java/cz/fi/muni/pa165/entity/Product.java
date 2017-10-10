@@ -39,9 +39,13 @@ public class Product {
 	private byte[] image;
 
 	private String imageMimeType;
+        
+        @NotNull
+	@Column(nullable=false,unique=true)
+        private String name;
 	
-
-	private String name;
+        @ManyToMany
+        private Set<Category> categories = new HashSet<>();;
 	
 	/*
 	 * The day this item has been added to the eshop
@@ -57,43 +61,27 @@ public class Product {
 	@OneToMany()
 	@OrderBy("priceStart DESC")
 	@JoinColumn(name="Product_FK")
-	private List<Price> priceHistory = new ArrayList<Price>();
+	private List<Price> priceHistory = new ArrayList<>();
 	
 	@Enumerated
 	private Color color;
 
-	
 	public void setId(Long id){
 		this.id = id;
 	}
 
-
-
-	/**
-	 * TODO these two methods are here just to make Task04 compilable. After you are finished
-	 * with TASK 02 you should delete this empty method
-	 * @param kitchen
-	 */
-	public void addCategory(Category kitchen) {	
+        public void removeCategory(Category category)	{
+		this.categories.remove(category);
 	}
-	public List<Product> getCategories() {
-		return null;
-	}
-	//TODO after you are done with task02 you can uncomment this methods
-//	public void removeCategory(Category category)	{
-//		this.categories.remove(category);
-//	}
-//	
-//	public void addCategory(Category c) {
-//		categories.add(c);
-//		c.addProduct(this);
-//	}
-//
-//	public Set<Category> getCategories() {
-//		return Collections.unmodifiableSet(categories);
-//	}
 	
+	public void addCategory(Category c) {
+		categories.add(c);
+		c.addProduct(this);
+	}
 
+	public Set<Category> getCategories() {
+		return Collections.unmodifiableSet(categories);
+	}
 
 	public java.util.Date getAddedDate() {
 		return addedDate;
@@ -101,32 +89,29 @@ public class Product {
 	public void setAddedDate(java.util.Date addedDate) {
 		this.addedDate = addedDate;
 	}
+        
 	public Product(Long productId) {
 		this.id = productId;
 	}
+        
 	public Product() {
 	}
+        
 	public byte[] getImage() {
 		return image;
 	}
-	
 
 	public String getImageMimeType() {
 		return imageMimeType;
 	}
 
-
-
 	public void setImageMimeType(String imageMimeType) {
 		this.imageMimeType = imageMimeType;
 	}
 
-
-
 	public Price getCurrentPrice() {
 		return currentPrice;
 	}
-
 
 	public void addHistoricalPrice(Price p){
 		priceHistory.add(p);
@@ -192,10 +177,4 @@ public class Product {
 			return false;
 		return true;
 	}
-
-
-
-	
-	
-	
 }

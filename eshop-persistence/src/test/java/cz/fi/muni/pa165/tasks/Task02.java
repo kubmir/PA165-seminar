@@ -32,7 +32,7 @@ public class Task02 extends AbstractTestNGSpringContextTests {
     @BeforeClass
     public void prepareTestData() {
         EntityManager manager = emf.createEntityManager();
-        
+
         manager.getTransaction().begin();
         electro = new Category();
         electro.setName("Electro");
@@ -60,6 +60,18 @@ public class Task02 extends AbstractTestNGSpringContextTests {
 
         manager.getTransaction().commit();
         manager.close();
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void testDoesntSaveNullName() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        
+        Product p = new Product();
+        em.persist(p);
+        
+        em.getTransaction().commit();
+        em.close();
     }
 
     @Test
